@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -41,7 +42,9 @@ class MainActivity : AppCompatActivity() {
         gameScoreTextView = findViewById(R.id.gameScoreTextView)
         timeTextView = findViewById(R.id.timeTextView)
 
-        tapMeButton.setOnClickListener {
+        tapMeButton.setOnClickListener {view->
+            val bounceAnimation = AnimationUtils.loadAnimation(this, R.anim.bounce)
+            view.startAnimation(bounceAnimation)
             incrementScore()
         }
 
@@ -49,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             score = savedInstanceState.getInt(SCORE_KEY)
             timeLeftOnTimer = savedInstanceState.getLong(TIME_LEFT_KEY)
             restoreGame()
-        }else{
+        } else {
             resetGame()
         }
     }
@@ -92,10 +95,10 @@ class MainActivity : AppCompatActivity() {
         gameStarted = false
     }
 
-    private fun restoreGame(){
+    private fun restoreGame() {
         gameScoreTextView.text = getString(R.string.playerScore, score)
 
-        val restoredTime = timeLeftOnTimer /1000
+        val restoredTime = timeLeftOnTimer / 1000
         timeTextView.text = getString(R.string.playerTime, restoredTime)
 
         countDownTimer = object : CountDownTimer(timeLeftOnTimer, countDownInterval) {
@@ -121,6 +124,9 @@ class MainActivity : AppCompatActivity() {
         score += 1
         val newScore = getString(R.string.playerScore, score)
         gameScoreTextView.text = newScore
+
+        val blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink)
+        gameScoreTextView.startAnimation(blinkAnimation)
     }
 
     private fun startGame() {
